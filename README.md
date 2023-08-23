@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Deployed link
+
+[Stackruit todo app](https://stackruit-todo.vercel.app/)
 
 ## Getting Started
 
@@ -17,7 +19,3 @@ yarn dev
 ```bash
 npm run deploy:vercel
 ```
-
-## Deployed link
-
-[Stackruit todo app](https://stackruit-todo.vercel.app/)
