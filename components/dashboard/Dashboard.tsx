@@ -6,6 +6,7 @@ import app, { db } from "../../firebase";
 import { User } from "firebase/auth";
 import { addDoc, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { collection } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 interface Task {
   id: string;
@@ -25,6 +26,10 @@ const Dashboard: React.FC<UserProfileProps> = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [eachTask, setEachTask] = useState<any>(null);
   const auth = getAuth(app);
+  const router = useRouter();
+  const handleRefresh = () => {
+    router.reload();
+  };
 
   const fetchTasks = async () => {
     let data: any = [];
@@ -62,6 +67,7 @@ const Dashboard: React.FC<UserProfileProps> = ({ user }) => {
     } else {
       setTasks([...tasks, newTask]);
       await addDoc(collection(db, "tasks", user.uid, "task"), newTask);
+      fetchTasks();
     }
     setLoading(false);
   };
@@ -69,11 +75,16 @@ const Dashboard: React.FC<UserProfileProps> = ({ user }) => {
   const updateTask = async (task: any) => {
     setEachTask(task);
     const docRef = doc(db, "tasks", user.uid, "task", task.docId);
-    await updateDoc(docRef, {
-      name: task.name,
-      description: task.description,
-    });
-    fetchTasks();
+    try {
+      await updateDoc(docRef, {
+        name: task.name,
+        description: task.description,
+      });
+      fetchTasks();
+    } catch (error: any) {
+      console.log(error.message);
+      handleRefresh();
+    }
   };
 
   const handleTaskComplete = async (
